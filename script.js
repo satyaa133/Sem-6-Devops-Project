@@ -56,14 +56,14 @@ function loadTasks() {
 }
 
 function toggleTask(index) {
-    let tasks = JSON.parse(localStorage.getItem("tasks"));
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
     tasks[index].completed = !tasks[index].completed;
     localStorage.setItem("tasks", JSON.stringify(tasks));
     loadTasks();
 }
 
 function deleteTask(index) {
-    let tasks = JSON.parse(localStorage.getItem("tasks"));
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
     tasks.splice(index, 1);
     localStorage.setItem("tasks", JSON.stringify(tasks));
     loadTasks();
