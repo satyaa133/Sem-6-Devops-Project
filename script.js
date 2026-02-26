@@ -79,3 +79,10 @@ taskInput.addEventListener("keypress", function (event) {
         addTask();
     }
 });
+
+function clearAll() {
+    if (confirm("Delete all tasks?")) {
+        localStorage.removeItem("tasks");
+        loadTasks();
+    }
+}
