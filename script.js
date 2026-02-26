@@ -68,3 +68,9 @@ function deleteTask(index) {
     localStorage.setItem("tasks", JSON.stringify(tasks));
     loadTasks();
 }
+
+taskInput.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+        addTask();
+    }
+});
