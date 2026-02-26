@@ -53,6 +53,11 @@ function loadTasks() {
         li.appendChild(delBtn);
         taskList.appendChild(li);
     });
+
+    if (tasks.length === 0) {
+    taskList.innerHTML = "<p>No tasks yet. Add something productive 🚀</p>";
+    return;
+    }
 }
 
 function toggleTask(index) {
