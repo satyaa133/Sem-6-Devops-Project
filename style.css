@@ -86,3 +86,9 @@ li.completed {
     border-radius: 4px;
     cursor: pointer;
 }
+
+p {
+    text-align: center;
+    color: #888;
+    margin-top: 10px;
+}
