@@ -13,6 +13,16 @@
 
     <div class="input-section">
         <input type="text" id="taskInput" placeholder="Enter your task...">
+
+        <!-- NEW -->
+        <select id="timeSelect">
+            <option value="30">30 minutes</option>
+            <option value="60">1 hour</option>
+            <option value="360">6 hours</option>
+            <option value="720">12 hours</option>
+            <option value="1440" selected>24 hours</option>
+        </select>
+
         <button onclick="addTask()">Add</button>
         <button onclick="clearAll()">Clear All</button>
     </div>
