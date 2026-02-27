@@ -1,127 +1,226 @@
-let taskList, taskInput, timeSelect;
+const taskList = document.getElementById("taskList");
+const taskInput = document.getElementById("taskInput");
+const prioritySelect = document.getElementById("prioritySelect");
+const timeSelect = document.getElementById("timeSelect");
+const addBtn = document.getElementById("addBtn");
+const filterButtons = document.querySelectorAll(".chip");
+const searchInput = document.getElementById("searchInput");
+const sortSelect = document.getElementById("sortSelect");
+const counts = document.getElementById("counts");
+const progressBar = document.getElementById("progressBar");
+const clearCompletedBtn = document.getElementById("clearCompleted");
+const clearAllBtn = document.getElementById("clearAll");
+const themeToggle = document.getElementById("themeToggle");
 
-// Load tasks on page load
-window.onload = () => {
-    taskList = document.getElementById("taskList");
-    taskInput = document.getElementById("taskInput");
-    timeSelect = document.getElementById("timeSelect");
+let tasks = [];
+let currentFilter = "all";
+let searchTerm = "";
+let sortMode = "soon";
 
-    loadTasks();
+const newId = () => (crypto?.randomUUID ? crypto.randomUUID() : `id-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadFromStorage();
+    render();
     setInterval(updateTimers, 1000);
 
-    taskInput.addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-            addTask();
-        }
-    });
-};
+    addBtn.addEventListener("click", addTask);
+    taskInput.addEventListener("keydown", (e) => { if (e.key === "Enter") addTask(); });
+    filterButtons.forEach((btn) => btn.addEventListener("click", () => setFilter(btn.dataset.filter)));
+    searchInput.addEventListener("input", (e) => { searchTerm = e.target.value.toLowerCase(); render(); });
+    sortSelect.addEventListener("change", (e) => { sortMode = e.target.value; render(); });
+    clearCompletedBtn.addEventListener("click", clearCompleted);
+    clearAllBtn.addEventListener("click", clearAll);
+    themeToggle.addEventListener("click", toggleTheme);
+});
 
-function addTask() {
-    let taskText = taskInput.value.trim();
-    if (taskText === "") {
-        alert("Please enter a task!");
-        return;
-    }
-
-    const minutes = parseInt(timeSelect.value);
-
-    let task = {
-        text: taskText,
-        completed: false,
-        deadline: Date.now() + minutes * 60 * 1000
-    };
-
-    saveTask(task);
-    taskInput.value = "";
-    loadTasks();
+function loadFromStorage() {
+    const stored = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks = stored.map((t) => ({
+        id: t.id || newId(),
+        text: t.text,
+        completed: Boolean(t.completed),
+        priority: t.priority || "medium",
+        deadline: t.deadline || (Date.now() + 60 * 60 * 1000),
+        createdAt: t.createdAt || Date.now()
+    }));
+    persist();
 }
 
-function saveTask(task) {
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    tasks.push(task);
+function persist() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-function loadTasks() {
-    taskList.innerHTML = "";
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+function addTask() {
+    const text = taskInput.value.trim();
+    if (!text) return alert("Please enter a task!");
 
-    if (tasks.length === 0) {
+    const minutes = parseInt(timeSelect.value, 10) || 60;
+    const task = {
+        id: newId(),
+        text,
+        completed: false,
+        priority: prioritySelect.value,
+        deadline: Date.now() + minutes * 60 * 1000,
+        createdAt: Date.now()
+    };
+
+    tasks.push(task);
+    persist();
+    taskInput.value = "";
+    taskInput.focus();
+    render();
+}
+
+function setFilter(filter) {
+    currentFilter = filter;
+    filterButtons.forEach((btn) => btn.classList.toggle("active", btn.dataset.filter === filter));
+    render();
+}
+
+function getFilteredTasks() {
+    return tasks
+        .filter((t) => {
+            if (currentFilter === "active") return !t.completed && !isExpired(t);
+            if (currentFilter === "completed") return t.completed;
+            if (currentFilter === "expired") return isExpired(t) && !t.completed;
+            return true;
+        })
+        .filter((t) => t.text.toLowerCase().includes(searchTerm));
+}
+
+function sortTasks(list) {
+    const sorted = [...list];
+    if (sortMode === "soon") sorted.sort((a, b) => a.deadline - b.deadline);
+    if (sortMode === "priority") {
+        const weight = { high: 0, medium: 1, low: 2 };
+        sorted.sort((a, b) => weight[a.priority] - weight[b.priority]);
+    }
+    if (sortMode === "new") sorted.sort((a, b) => b.createdAt - a.createdAt);
+    return sorted;
+}
+
+function render() {
+    taskList.innerHTML = "";
+    const list = sortTasks(getFilteredTasks());
+
+    if (list.length === 0) {
         taskList.innerHTML = "<p>No tasks yet. Add something productive 🚀</p>";
+        updateCounts();
         return;
     }
 
-    tasks.forEach((task, index) => {
-        let li = document.createElement("li");
+    list.forEach((task) => {
+        const li = document.createElement("li");
+        li.className = task.completed ? "completed" : "";
 
-        let textSpan = document.createElement("span");
-        textSpan.textContent = task.text;
+        const main = document.createElement("div");
+        main.className = "task-main";
 
-        if (task.completed) textSpan.classList.add("completed");
+        const title = document.createElement("div");
+        title.className = "task-title";
+        title.textContent = task.text;
 
-        textSpan.onclick = () => toggleTask(index);
+        const meta = document.createElement("div");
+        meta.className = "meta";
 
-        let delBtn = document.createElement("button");
-        delBtn.textContent = "X";
-        delBtn.className = "delete";
-        delBtn.onclick = (e) => {
-            e.stopPropagation();
-            deleteTask(index);
-        };
+        const priority = document.createElement("span");
+        priority.className = `badge ${task.priority}`;
+        priority.textContent = task.priority;
 
-        let timer = document.createElement("div");
+        const created = document.createElement("span");
+        created.className = "pill";
+        created.textContent = new Date(task.createdAt).toLocaleString();
+
+        const timer = document.createElement("span");
         timer.className = "timer";
-        timer.id = `timer-${index}`;
+        timer.dataset.id = task.id;
 
-        li.appendChild(textSpan);
-        li.appendChild(delBtn);
-        li.appendChild(timer);
+        meta.append(priority, created, timer);
+        main.append(title, meta);
+
+        const actions = document.createElement("div");
+        actions.className = "actions-row";
+
+        const toggleBtn = document.createElement("button");
+        toggleBtn.textContent = task.completed ? "Undo" : "Done";
+        toggleBtn.className = `complete-btn ${task.completed ? "completed" : ""}`;
+        toggleBtn.onclick = () => toggleTask(task.id);
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "Delete";
+        delBtn.className = "delete";
+        delBtn.onclick = () => deleteTask(task.id);
+
+        actions.append(toggleBtn, delBtn);
+        li.append(main, actions);
         taskList.appendChild(li);
     });
 
     updateTimers();
+    updateCounts();
+}
+
+function isExpired(task) {
+    return Date.now() > task.deadline;
 }
 
 function updateTimers() {
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
-    tasks.forEach((task, index) => {
-        let timerEl = document.getElementById(`timer-${index}`);
+    tasks.forEach((task) => {
+        const timerEl = taskList.querySelector(`.timer[data-id="${task.id}"]`);
         if (!timerEl) return;
 
-        let timeLeft = task.deadline - Date.now();
-
-        if (timeLeft <= 0) {
-            timerEl.textContent = "Time expired";
+        const diff = task.deadline - Date.now();
+        if (diff <= 0) {
+            timerEl.textContent = "Expired";
             timerEl.classList.add("expired");
-        } else {
-            let h = Math.floor(timeLeft / (1000 * 60 * 60));
-            let m = Math.floor((timeLeft / (1000 * 60)) % 60);
-            let s = Math.floor((timeLeft / 1000) % 60);
-            timerEl.textContent = `Time left: ${h}h ${m}m ${s}s`;
+            return;
         }
+
+        const h = Math.floor(diff / (1000 * 60 * 60));
+        const m = Math.floor((diff / (1000 * 60)) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+        timerEl.textContent = `${h}h ${m}m ${s}s left`;
     });
 
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    persist();
 }
 
-function toggleTask(index) {
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    tasks[index].completed = !tasks[index].completed;
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    loadTasks();
+function toggleTask(id) {
+    const idx = tasks.findIndex((t) => t.id === id);
+    if (idx === -1) return;
+    tasks[idx].completed = !tasks[idx].completed;
+    persist();
+    render();
 }
 
-function deleteTask(index) {
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    tasks.splice(index, 1);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    loadTasks();
+function deleteTask(id) {
+    tasks = tasks.filter((t) => t.id !== id);
+    persist();
+    render();
+}
+
+function clearCompleted() {
+    tasks = tasks.filter((t) => !t.completed);
+    persist();
+    render();
 }
 
 function clearAll() {
-    if (confirm("Delete all tasks?")) {
-        localStorage.removeItem("tasks");
-        loadTasks();
-    }
+    if (!confirm("Delete all tasks?")) return;
+    tasks = [];
+    persist();
+    render();
+}
+
+function updateCounts() {
+    const total = tasks.length;
+    const done = tasks.filter((t) => t.completed).length;
+    counts.textContent = `${total} task${total === 1 ? "" : "s"} • ${done} completed`;
+    const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+    progressBar.style.width = `${pct}%`;
+}
+
+function toggleTheme() {
+    document.body.classList.toggle("light");
 }
