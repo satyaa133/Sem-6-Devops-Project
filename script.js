@@ -53,18 +53,36 @@ function loadTasks() {
         li.appendChild(delBtn);
         taskList.appendChild(li);
     });
+
+    if (tasks.length === 0) {
+    taskList.innerHTML = "<p>No tasks yet. Add something productive 🚀</p>";
+    return;
+    }
 }
 
 function toggleTask(index) {
-    let tasks = JSON.parse(localStorage.getItem("tasks"));
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
     tasks[index].completed = !tasks[index].completed;
     localStorage.setItem("tasks", JSON.stringify(tasks));
     loadTasks();
 }
 
 function deleteTask(index) {
-    let tasks = JSON.parse(localStorage.getItem("tasks"));
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
     tasks.splice(index, 1);
     localStorage.setItem("tasks", JSON.stringify(tasks));
     loadTasks();
+}
+
+taskInput.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+        addTask();
+    }
+});
+
+function clearAll() {
+    if (confirm("Delete all tasks?")) {
+        localStorage.removeItem("tasks");
+        loadTasks();
+    }
 }
