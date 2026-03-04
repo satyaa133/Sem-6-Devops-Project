@@ -83,6 +83,25 @@ input, select {
     font-size: 14px;
 }
 
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: linear-gradient(120deg, transparent 0%, transparent 60%, rgba(255,255,255,0.08) 100%);
+    cursor: pointer;
+}
+
+select:focus,
+select:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+option {
+    background: #0f172a;
+    color: #f8fafc;
+}
+
 input::placeholder {
     color: #9ca3af;
 }
@@ -256,5 +275,6 @@ body.light .container { background: rgba(255,255,255,0.8); border-color: #d1d5db
 body.light .chip { background: #f0f0f0; color: #1f2937; border-color: #d1d5db; }
 body.light .chip.active { background: #7c5dff; color: #fff; border-color: #7c5dff; }
 body.light input, body.light select { background: #f8f9fc; color: #1f2937; border-color: #d1d5db; }
+body.light option { background: #fff; color: #111827; }
 body.light .tagline { color: #4b5563; }
 body.light li { background: rgba(255,255,255,0.6); border-color: #d1d5db; }
