@@ -408,6 +408,35 @@ li.completed .task-title {
     gap: 12px;
 }
 
+.password-rules {
+    list-style: none;
+    display: grid;
+    gap: 6px;
+    margin: -2px 0 2px;
+    padding: 0;
+}
+
+.rule {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+}
+
+.rule-icon {
+    font-weight: 700;
+    width: 14px;
+    text-align: center;
+}
+
+.rule.valid {
+    color: var(--success);
+}
+
+.rule.invalid {
+    color: var(--danger);
+}
+
 .auth-links {
     margin-top: 14px;
     font-size: 0.9rem;
@@ -585,6 +614,14 @@ body.light .form-message.error {
 
 body.light .form-message.success {
     color: #166534;
+}
+
+body.light .rule.valid {
+    color: #166534;
+}
+
+body.light .rule.invalid {
+    color: #b91c1c;
 }
 
 @keyframes rise-in {
