@@ -37,6 +37,13 @@ function initAuthFlow() {
     }
 
     if (registerForm) {
+        const passwordInput = document.getElementById("password");
+        if (passwordInput) {
+            updatePasswordStrengthUI(passwordInput.value);
+            passwordInput.addEventListener("input", (event) => {
+                updatePasswordStrengthUI(event.target.value);
+            });
+        }
         registerForm.addEventListener("submit", handleRegister);
     }
 
@@ -57,8 +64,8 @@ function handleRegister(event) {
         return renderMessage(message, "All fields are required.", "error");
     }
 
-    if (password.length < 6) {
-        return renderMessage(message, "Password must be at least 6 characters.", "error");
+    if (!isPasswordStrong(password)) {
+        return renderMessage(message, "Password must be at least 8 characters and include a number and a special character.", "error");
     }
 
     if (password !== confirmPassword) {
@@ -118,4 +125,38 @@ function renderMessage(element, text, type) {
     element.textContent = text;
     element.classList.remove("error", "success");
     if (type) element.classList.add(type);
+}
+
+function getPasswordRules(password) {
+    return {
+        length: password.length >= 8,
+        number: /\d/.test(password),
+        special: /[^A-Za-z0-9]/.test(password)
+    };
+}
+
+function isPasswordStrong(password) {
+    const rules = getPasswordRules(password);
+    return rules.length && rules.number && rules.special;
+}
+
+function updatePasswordStrengthUI(password) {
+    const ruleLength = document.getElementById("rule-length");
+    const ruleNumber = document.getElementById("rule-number");
+    const ruleSpecial = document.getElementById("rule-special");
+
+    if (!ruleLength || !ruleNumber || !ruleSpecial) return;
+
+    const rules = getPasswordRules(password);
+
+    setRuleState(ruleLength, rules.length);
+    setRuleState(ruleNumber, rules.number);
+    setRuleState(ruleSpecial, rules.special);
+}
+
+function setRuleState(ruleElement, isValid) {
+    ruleElement.classList.toggle("valid", isValid);
+    ruleElement.classList.toggle("invalid", !isValid);
+    const icon = ruleElement.querySelector(".rule-icon");
+    if (icon) icon.textContent = isValid ? "✔" : "✖";
 }
