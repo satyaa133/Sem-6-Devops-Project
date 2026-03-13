@@ -12,6 +12,9 @@ const clearCompletedBtn = document.getElementById("clearCompleted");
 const clearAllBtn = document.getElementById("clearAll");
 const themeToggle = document.getElementById("themeToggle");
 
+const session = JSON.parse(localStorage.getItem("studentdo_session") || "null");
+const storageKey = session?.email ? `tasks_${session.email}` : "tasks";
+
 let tasks = [];
 let currentFilter = "all";
 let searchTerm = "";
@@ -20,6 +23,8 @@ let sortMode = "soon";
 const newId = () => (crypto?.randomUUID ? crypto.randomUUID() : `id-${Date.now()}-${Math.random().toString(16).slice(2)}`);
 
 document.addEventListener("DOMContentLoaded", () => {
+    if (!taskList) return;
+
     loadFromStorage();
     render();
     setInterval(updateTimers, 1000);
@@ -35,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function loadFromStorage() {
-    const stored = JSON.parse(localStorage.getItem("tasks")) || [];
+    const stored = JSON.parse(localStorage.getItem(storageKey)) || [];
     tasks = stored.map((t) => ({
         id: t.id || newId(),
         text: t.text,
@@ -48,7 +53,7 @@ function loadFromStorage() {
 }
 
 function persist() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem(storageKey, JSON.stringify(tasks));
 }
 
 function addTask() {
@@ -105,7 +110,7 @@ function render() {
     const list = sortTasks(getFilteredTasks());
 
     if (list.length === 0) {
-        taskList.innerHTML = "<p>No tasks yet. Add something productive 🚀</p>";
+        taskList.innerHTML = "<li class=\"empty-state\">No tasks yet. Add something productive.</li>";
         updateCounts();
         return;
     }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentDo | Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+    <section class="auth-card" aria-labelledby="loginTitle">
+        <p class="eyebrow">Welcome Back</p>
+        <h1 id="loginTitle">Sign in to StudentDo</h1>
+        <p class="auth-subtext">Continue from where you left off and manage your tasks with clarity.</p>
+
+        <form id="loginForm" class="auth-form">
+            <input type="email" id="email" placeholder="Email address" autocomplete="email" required>
+            <input type="password" id="password" placeholder="Password" autocomplete="current-password" required>
+            <button type="submit">Login</button>
+            <p id="loginMessage" class="form-message" aria-live="polite"></p>
+        </form>
+
+        <p class="auth-links">No account yet? <a href="register.html">Create one</a></p>
+    </section>
+
+    <script src="auth.js"></script>
+</body>
+</html>
