@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone repository') {
+            steps {
+                // Jenkins clones the repository automatically when using 'Pipeline script from SCM'
+                echo 'Checking out code from Git...'
+                checkout scm
+            }
+        }
+
+        stage('Build project') {
+            steps {
+                echo 'Building the project...'
+                // Replace with your build command, e.g., sh './mvnw clean install'
+            }
+        }
+
+        stage('Test application') {
+            steps {
+                echo 'Running tests...'
+                // Replace with your test command, e.g., sh './mvnw test'
+            }
+        }
+
+        stage('Deploy application') {
+            steps {
+                echo 'Deploying application...'
+                // Replace with your deployment command or script
+            }
+        }
+    }
+}
