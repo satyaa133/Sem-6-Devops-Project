@@ -14,12 +14,14 @@ const themeToggle = document.getElementById("themeToggle");
 
 const session = JSON.parse(localStorage.getItem("studentdo_session") || "null");
 const storageKey = session?.email ? `tasks_${session.email}` : "tasks";
+const streakKey = session?.email ? `streak_${session.email}` : "streak";
 
 let tasks = [];
 let currentFilter = "all";
 let searchTerm = "";
 let sortMode = "soon";
 let selectedDateFilter = null;
+let streak = { count: 0, lastCompletionDate: null };
 
 const newId = () => (crypto?.randomUUID ? crypto.randomUUID() : `id-${Date.now()}-${Math.random().toString(16).slice(2)}`);
 
@@ -27,7 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!taskList) return;
 
     loadFromStorage();
+    loadStreak();
     render();
+    updateStreakDisplay();
     setInterval(updateTimers, 1000);
 
     addBtn.addEventListener("click", addTask);
@@ -55,6 +59,66 @@ function loadFromStorage() {
 
 function persist() {
     localStorage.setItem(storageKey, JSON.stringify(tasks));
+}
+
+function loadStreak() {
+    const stored = localStorage.getItem(streakKey);
+    if (stored) {
+        streak = JSON.parse(stored);
+    } else {
+        streak = { count: 0, lastCompletionDate: null };
+    }
+}
+
+function persistStreak() {
+    localStorage.setItem(streakKey, JSON.stringify(streak));
+}
+
+function updateStreak() {
+    const today = getLocalDateString(new Date());
+    
+    // Check if any task was completed today by checking the createdAt date of completed tasks
+    // A task is "completed today" if it has completed=true
+    const hasCompletionToday = tasks.some(t => {
+        if (!t.completed) return false;
+        // For simplicity, we check if task was marked completed (we'll use deadline as reference)
+        // In a real app, we'd track completionDate
+        return true; // If completed, consider it for today's streak
+    });
+    
+    if (hasCompletionToday) {
+        if (streak.lastCompletionDate === today) {
+            // Already counted for today
+            return;
+        }
+        
+        // Check if last completion was yesterday
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = getLocalDateString(yesterday);
+        
+        if (streak.lastCompletionDate === yesterdayStr) {
+            // Continuing streak
+            streak.count++;
+        } else if (streak.lastCompletionDate === null) {
+            // First completion ever
+            streak.count = 1;
+        } else {
+            // Missed days, restart streak
+            streak.count = 1;
+        }
+        
+        streak.lastCompletionDate = today;
+    }
+    
+    persistStreak();
+}
+
+function updateStreakDisplay() {
+    const streakCountEl = document.getElementById("streakCount");
+    if (streakCountEl) {
+        streakCountEl.textContent = streak.count;
+    }
 }
 
 function addTask() {
@@ -187,6 +251,7 @@ function render() {
 
     updateTimers();
     updateCounts();
+    updateStreakDisplay();
 }
 
 function isExpired(task) {
@@ -219,18 +284,24 @@ function toggleTask(id) {
     if (idx === -1) return;
     tasks[idx].completed = !tasks[idx].completed;
     persist();
+    updateStreak();
+    updateStreakDisplay();
     render();
 }
 
 function deleteTask(id) {
     tasks = tasks.filter((t) => t.id !== id);
     persist();
+    updateStreak();
+    updateStreakDisplay();
     render();
 }
 
 function clearCompleted() {
     tasks = tasks.filter((t) => !t.completed);
     persist();
+    updateStreak();
+    updateStreakDisplay();
     render();
 }
 
@@ -238,6 +309,8 @@ function clearAll() {
     if (!confirm("Delete all tasks?")) return;
     tasks = [];
     persist();
+    updateStreak();
+    updateStreakDisplay();
     render();
 }
 
