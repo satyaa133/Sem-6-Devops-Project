@@ -19,6 +19,7 @@ let tasks = [];
 let currentFilter = "all";
 let searchTerm = "";
 let sortMode = "soon";
+let selectedDateFilter = null;
 
 const newId = () => (crypto?.randomUUID ? crypto.randomUUID() : `id-${Date.now()}-${Math.random().toString(16).slice(2)}`);
 
@@ -91,7 +92,12 @@ function getFilteredTasks() {
             if (currentFilter === "expired") return isExpired(t) && !t.completed;
             return true;
         })
-        .filter((t) => t.text.toLowerCase().includes(searchTerm));
+        .filter((t) => t.text.toLowerCase().includes(searchTerm))
+        .filter((t) => {
+            if (!selectedDateFilter) return true;
+            const taskDate = getLocalDateString(new Date(t.deadline));
+            return taskDate === selectedDateFilter;
+        });
 }
 
 function sortTasks(list) {
@@ -230,8 +236,15 @@ function toggleTheme() {
     document.body.classList.toggle("light");
 }
 
+// Helper function to get consistent date string in local timezone
+function getLocalDateString(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
 // Calendar functionality
-let selectedDate = null;
 let currentMonth = new Date();
 
 const calendarDays = document.getElementById("calendarDays");
@@ -300,20 +313,20 @@ function createDayElement(dayNum, month, year, isOtherMonth) {
     }
 
     const dateObj = new Date(year, month, dayNum);
-    const dateStr = dateObj.toISOString().split("T")[0];
+    const dateStr = getLocalDateString(dateObj);
     
     // Count tasks for this date
     const tasksForDate = tasks.filter(t => {
-        const taskDate = new Date(t.deadline).toISOString().split("T")[0];
+        const taskDate = getLocalDateString(new Date(t.deadline));
         return taskDate === dateStr;
     });
 
     // Check if today
-    const today = new Date().toISOString().split("T")[0];
+    const today = getLocalDateString(new Date());
     const isToday = dateStr === today;
 
     // Check if selected
-    const isSelected = selectedDate === dateStr;
+    const isSelected = selectedDateFilter === dateStr;
 
     if (isToday) div.classList.add("today");
     if (tasksForDate.length > 0) div.classList.add("has-tasks");
@@ -330,84 +343,22 @@ function createDayElement(dayNum, month, year, isOtherMonth) {
     }
 
     div.addEventListener("click", () => {
-        selectedDate = dateStr;
+        if (selectedDateFilter === dateStr) {
+            selectedDateFilter = null;
+            currentFilter = "all";
+            filterButtons.forEach((btn) => btn.classList.toggle("active", btn.dataset.filter === currentFilter));
+        } else {
+            filterTasksByDate(dateStr);
+        }
         renderCalendar();
-        filterTasksByDate(dateStr);
     });
 
     return div;
 }
 
 function filterTasksByDate(dateStr) {
-    const filtered = tasks.filter(t => {
-        const taskDate = new Date(t.deadline).toISOString().split("T")[0];
-        return taskDate === dateStr;
-    });
-
-    taskList.innerHTML = "";
-
-    if (filtered.length === 0) {
-        const date = new Date(dateStr);
-        const dateDisplay = date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
-        taskList.innerHTML = `<li class="empty-state">No tasks for ${dateDisplay}. Great job!</li>`;
-        updateCounts();
-        return;
-    }
-
-    const sorted = sortTasks(filtered);
-    sorted.forEach((task) => {
-        const li = document.createElement("li");
-        li.className = task.completed ? "completed" : "";
-
-        const main = document.createElement("div");
-        main.className = "task-main";
-
-        const title = document.createElement("div");
-        title.className = "task-title";
-        title.textContent = task.text;
-
-        const meta = document.createElement("div");
-        meta.className = "meta";
-
-        const priority = document.createElement("span");
-        priority.className = `badge ${task.priority}`;
-        priority.textContent = task.priority;
-
-        const created = document.createElement("span");
-        created.className = "pill";
-        created.textContent = new Date(task.createdAt).toLocaleString();
-
-        const timer = document.createElement("span");
-        timer.className = "timer";
-        timer.dataset.id = task.id;
-
-        meta.append(priority, created, timer);
-        main.append(title, meta);
-
-        const actions = document.createElement("div");
-        actions.className = "actions-row";
-
-        const toggleBtn = document.createElement("button");
-        toggleBtn.textContent = task.completed ? "Undo" : "Done";
-        toggleBtn.className = `complete-btn ${task.completed ? "completed" : ""}`;
-        toggleBtn.onclick = () => {
-            toggleTask(task.id);
-            filterTasksByDate(dateStr);
-        };
-
-        const delBtn = document.createElement("button");
-        delBtn.textContent = "Delete";
-        delBtn.className = "delete";
-        delBtn.onclick = () => {
-            deleteTask(task.id);
-            filterTasksByDate(dateStr);
-        };
-
-        actions.append(toggleBtn, delBtn);
-        li.append(main, actions);
-        taskList.appendChild(li);
-    });
-
-    updateTimers();
-    updateCounts();
+    selectedDateFilter = dateStr;
+    currentFilter = "all";
+    filterButtons.forEach((btn) => btn.classList.toggle("active", btn.dataset.filter === currentFilter));
+    render();
 }

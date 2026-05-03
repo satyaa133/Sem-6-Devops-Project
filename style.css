@@ -639,7 +639,7 @@ body.light .rule.invalid {
 /* Calendar Styles */
 .main-content {
     display: grid;
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: 300px 1fr;
     gap: 24px;
     margin-top: 24px;
 }
@@ -652,6 +652,10 @@ body.light .rule.invalid {
     height: fit-content;
     position: sticky;
     top: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 300px;
 }
 
 .calendar-header {
@@ -661,13 +665,17 @@ body.light .rule.invalid {
     margin-bottom: 16px;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--panel-border);
+    gap: 8px;
 }
 
 .calendar-header h2 {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--text);
     margin: 0;
+    flex: 1;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .nav-btn {
@@ -682,6 +690,7 @@ body.light .rule.invalid {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .nav-btn:hover {
@@ -698,11 +707,11 @@ body.light .rule.invalid {
 
 .weekday {
     text-align: center;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
     color: var(--muted);
     text-transform: uppercase;
-    padding: 6px 0;
+    padding: 4px 0;
 }
 
 .calendar-days {
@@ -717,15 +726,16 @@ body.light .rule.invalid {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-radius: 6px;
     border: 1px solid var(--panel-border);
     background: rgba(255, 255, 255, 0.05);
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 600;
     transition: all 150ms ease;
     position: relative;
-    padding: 4px 0;
+    padding: 2px 0;
+    min-width: 0;
 }
 
 .calendar-day:hover {
@@ -767,13 +777,13 @@ body.light .rule.invalid {
 }
 
 .calendar-day-number {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .calendar-day-count {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--success);
-    margin-top: 2px;
+    margin-top: 1px;
 }
 
 .tasks-section {
@@ -793,6 +803,7 @@ body.light .rule.invalid {
     .calendar-section {
         position: static;
         max-width: 100%;
+        max-height: none;
     }
 }
 
@@ -802,15 +813,15 @@ body.light .rule.invalid {
     }
 
     .calendar-day {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
     }
 
     .calendar-day-number {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
 
     .calendar-day-count {
-        font-size: 0.6rem;
+        font-size: 0.55rem;
     }
 }
 
