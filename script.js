@@ -62,12 +62,28 @@ function addTask() {
     if (!text) return alert("Please enter a task!");
 
     const minutes = parseInt(timeSelect.value, 10) || 60;
+    
+    // Get the target date (selected date or today)
+    let targetDateStr;
+    if (selectedDateFilter) {
+        targetDateStr = selectedDateFilter;
+    } else {
+        targetDateStr = getLocalDateString(new Date());
+    }
+    
+    // Parse the date string and create a Date object at midnight
+    const [year, month, day] = targetDateStr.split('-').map(Number);
+    const targetDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+    
+    // Calculate deadline from midnight of target date plus duration
+    const deadline = targetDate.getTime() + minutes * 60 * 1000;
+    
     const task = {
         id: newId(),
         text,
         completed: false,
         priority: prioritySelect.value,
-        deadline: Date.now() + minutes * 60 * 1000,
+        deadline: deadline,
         createdAt: Date.now()
     };
 
@@ -76,6 +92,7 @@ function addTask() {
     taskInput.value = "";
     taskInput.focus();
     render();
+    renderCalendar();
 }
 
 function setFilter(filter) {
