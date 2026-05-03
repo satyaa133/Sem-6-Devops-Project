@@ -5,18 +5,18 @@
 }
 
 :root {
-    --bg-main: linear-gradient(130deg, #052659 0%, #021024 45%, #083d77 100%);
-    --bg-overlay: radial-gradient(circle at 10% 20%, rgba(255, 190, 92, 0.24) 0%, rgba(255, 190, 92, 0) 35%), radial-gradient(circle at 85% 0%, rgba(0, 173, 181, 0.22) 0%, rgba(0, 173, 181, 0) 38%);
-    --panel: rgba(8, 27, 48, 0.74);
-    --panel-strong: rgba(6, 22, 41, 0.92);
-    --panel-border: rgba(255, 255, 255, 0.16);
-    --text: #f5fbff;
-    --muted: #afd8f2;
-    --accent: #ff7a1a;
-    --accent-strong: #ffb347;
-    --success: #67e8a3;
-    --danger: #fb7185;
-    --shadow: 0 20px 60px rgba(2, 16, 36, 0.45);
+    --bg-main: linear-gradient(135deg, #0f3c5f 0%, #1a5a8a 50%, #0d2d47 100%);
+    --bg-overlay: radial-gradient(circle at 10% 20%, rgba(79, 172, 254, 0.15) 0%, rgba(79, 172, 254, 0) 35%), radial-gradient(circle at 85% 0%, rgba(34, 197, 228, 0.12) 0%, rgba(34, 197, 228, 0) 38%);
+    --panel: rgba(15, 45, 80, 0.8);
+    --panel-strong: rgba(10, 35, 65, 0.95);
+    --panel-border: rgba(79, 172, 254, 0.2);
+    --text: #e8f4f8;
+    --muted: #a8d5f7;
+    --accent: #4fab86;
+    --accent-strong: #5cc49c;
+    --success: #5cc49c;
+    --danger: #e07856;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     --font-display: "Space Grotesk", "Segoe UI", sans-serif;
     --font-body: "Manrope", "Segoe UI", sans-serif;
 }
@@ -318,18 +318,18 @@ li.completed .task-title {
 }
 
 .badge.high {
-    background: rgba(251, 113, 133, 0.22);
-    color: #ffc2cc;
+    background: rgba(224, 120, 86, 0.2);
+    color: #f5a787;
 }
 
 .badge.medium {
-    background: rgba(255, 179, 71, 0.2);
-    color: #ffe3b8;
+    background: rgba(79, 172, 254, 0.2);
+    color: #8ecef9;
 }
 
 .badge.low {
-    background: rgba(103, 232, 163, 0.2);
-    color: #b8ffdc;
+    background: rgba(92, 196, 156, 0.2);
+    color: #9fddc4;
 }
 
 .pill {
@@ -353,18 +353,18 @@ li.completed .task-title {
 }
 
 .delete {
-    background: rgba(251, 113, 133, 0.2);
-    color: #ffdce3;
+    background: rgba(224, 120, 86, 0.2);
+    color: #f5a787;
 }
 
 .complete-btn {
-    background: rgba(103, 232, 163, 0.2);
-    color: #dcffe9;
+    background: rgba(92, 196, 156, 0.2);
+    color: #9fddc4;
 }
 
 .complete-btn.completed {
-    background: rgba(191, 219, 254, 0.2);
-    color: #e0f2fe;
+    background: rgba(79, 172, 254, 0.2);
+    color: #8ecef9;
 }
 
 .empty-state {
@@ -444,7 +444,7 @@ li.completed .task-title {
 }
 
 .auth-links a {
-    color: #ffe3b8;
+    color: #5cc49c;
     text-decoration: none;
     font-weight: 700;
 }
@@ -452,15 +452,15 @@ li.completed .task-title {
 .form-message {
     min-height: 20px;
     font-size: 0.85rem;
-    color: #ffd6a6;
+    color: #8ecef9;
 }
 
 .form-message.error {
-    color: #ffc2cc;
+    color: #f5a787;
 }
 
 .form-message.success {
-    color: #bcf7da;
+    color: #9fddc4;
 }
 
 @media (max-width: 860px) {
@@ -507,113 +507,114 @@ li.completed .task-title {
 }
 
 body.light {
-    --bg-main: linear-gradient(135deg, #f5f8ff 0%, #edf4ff 40%, #e4f1ff 100%);
-    --bg-overlay: radial-gradient(circle at 12% 15%, rgba(255, 173, 94, 0.25) 0%, rgba(255, 173, 94, 0) 35%), radial-gradient(circle at 100% 0%, rgba(6, 182, 212, 0.2) 0%, rgba(6, 182, 212, 0) 40%);
-    --panel: rgba(255, 255, 255, 0.88);
-    --panel-strong: rgba(255, 255, 255, 0.95);
-    --panel-border: rgba(2, 43, 74, 0.18);
-    --text: #0b2a45;
-    --muted: #3f6482;
-    --shadow: 0 20px 45px rgba(65, 98, 133, 0.2);
+    --bg-main: linear-gradient(135deg, #f0f9fc 0%, #e3f2fd 40%, #f5f9fb 100%);
+    --bg-overlay: radial-gradient(circle at 12% 15%, rgba(79, 172, 254, 0.08) 0%, rgba(79, 172, 254, 0) 35%), radial-gradient(circle at 100% 0%, rgba(92, 196, 156, 0.07) 0%, rgba(92, 196, 156, 0) 40%);
+    --panel: rgba(255, 255, 255, 0.9);
+    --panel-strong: rgba(255, 255, 255, 0.98);
+    --panel-border: rgba(79, 172, 254, 0.2);
+    --text: #1a3a4f;
+    --muted: #4a7c9e;
+    --shadow: 0 8px 20px rgba(15, 60, 95, 0.15);
 }
 
 body.light .container,
 body.light .auth-card {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(249, 252, 255, 0.94));
-    border-color: rgba(89, 120, 148, 0.28);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 249, 251, 0.96));
+    border-color: rgba(79, 172, 254, 0.18);
 }
 
 body.light input,
 body.light select {
     background: #ffffff;
-    color: #102a43;
-    border-color: rgba(89, 120, 148, 0.28);
+    color: #1a3a4f;
+    border-color: rgba(79, 172, 254, 0.2);
 }
 
 body.light input::placeholder {
-    color: #5f7994;
+    color: #4a7c9e;
 }
 
 body.light select option {
-    color: #102a43;
+    color: #1a3a4f;
     background: #ffffff;
 }
 
 body.light .chip {
-    background: #eef4fb;
-    color: #0b2a45;
-    border-color: rgba(89, 120, 148, 0.28);
+    background: #e3f2fd;
+    color: #1a3a4f;
+    border-color: rgba(79, 172, 254, 0.2);
 }
 
 body.light .chip.active {
+    background: linear-gradient(120deg, #4fab86, #5cc49c);
     color: #ffffff;
 }
 
 body.light .progress {
-    background: #dde7f2;
-    border-color: rgba(89, 120, 148, 0.28);
+    background: #d4e9f5;
+    border-color: rgba(79, 172, 254, 0.2);
 }
 
 body.light li,
 body.light .empty-state {
     background: #ffffff;
-    border-color: rgba(89, 120, 148, 0.24);
+    border-color: rgba(79, 172, 254, 0.15);
 }
 
 body.light li.completed .task-title {
-    color: #5f7994;
+    color: #4a7c9e;
 }
 
 body.light .ghost {
-    background: rgba(255, 255, 255, 0.7);
-    color: #0b2a45;
-    border-color: rgba(89, 120, 148, 0.28);
+    background: rgba(255, 255, 255, 0.8);
+    color: #1a3a4f;
+    border-color: rgba(79, 172, 254, 0.2);
 }
 
 body.light .delete {
-    background: rgba(251, 113, 133, 0.14);
-    color: #9f1239;
+    background: rgba(224, 120, 86, 0.15);
+    color: #c85229;
 }
 
 body.light .complete-btn {
-    background: rgba(22, 163, 74, 0.14);
-    color: #166534;
+    background: rgba(92, 196, 156, 0.15);
+    color: #0d7a58;
 }
 
 body.light .complete-btn.completed {
-    background: rgba(148, 163, 184, 0.22);
-    color: #334155;
+    background: rgba(79, 172, 254, 0.15);
+    color: #0d5fa8;
 }
 
 body.light .badge.high {
-    background: rgba(251, 113, 133, 0.16);
-    color: #be123c;
+    background: rgba(224, 120, 86, 0.15);
+    color: #c85229;
 }
 
 body.light .badge.medium {
-    background: rgba(37, 99, 235, 0.16);
-    color: #1d4ed8;
+    background: rgba(79, 172, 254, 0.15);
+    color: #0d5fa8;
 }
 
 body.light .badge.low {
-    background: rgba(22, 163, 74, 0.16);
-    color: #166534;
+    background: rgba(92, 196, 156, 0.15);
+    color: #0d7a58;
 }
 
 body.light .auth-links a {
-    color: #0f766e;
+    color: #2d7d5f;
 }
 
 body.light .form-message {
-    color: #0f766e;
+    color: #2d7d5f;
 }
 
 body.light .form-message.error {
-    color: #b91c1c;
+    color: #c85229;
 }
 
 body.light .form-message.success {
-    color: #166534;
+    color: #0d7a58;
 }
 
 body.light .rule.valid {
@@ -827,31 +828,31 @@ body.light .rule.invalid {
 
 body.light .calendar-section {
     background: #ffffff;
-    border-color: rgba(89, 120, 148, 0.24);
+    border-color: rgba(79, 172, 254, 0.15);
 }
 
 body.light .calendar-day {
-    background: #f9fafb;
-    border-color: rgba(89, 120, 148, 0.24);
+    background: #f5f9fb;
+    border-color: rgba(79, 172, 254, 0.15);
 }
 
 body.light .calendar-day:hover {
-    background: #ffecd6;
-    border-color: var(--accent);
+    background: #e3f2fd;
+    border-color: #4fab86;
 }
 
 body.light .calendar-day.today {
-    border-color: var(--accent);
-    background: #fff5e6;
+    border-color: #4fab86;
+    background: #f0f9f7;
 }
 
 body.light .calendar-day.has-tasks {
-    border-color: var(--success);
-    background: #e8f9f0;
+    border-color: #5cc49c;
+    background: #e8f5f1;
 }
 
 body.light .calendar-day.has-tasks.today {
-    background: #dcf5e8;
+    background: #dceee7;
 }
 
 body.light .calendar-day.selected {
@@ -859,10 +860,11 @@ body.light .calendar-day.selected {
 }
 
 body.light .nav-btn {
-    border-color: rgba(89, 120, 148, 0.28);
-    color: #0b2a45;
+    border-color: rgba(79, 172, 254, 0.2);
+    color: #1a3a4f;
 }
 
 body.light .nav-btn:hover {
-    background: rgba(255, 179, 71, 0.2);
+    background: rgba(79, 172, 254, 0.15);
+    border-color: #4fab86;
 }
